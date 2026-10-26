@@ -31,7 +31,13 @@ const elements = {
   progressLabel: document.querySelector("#progress-label"),
   progressBar: document.querySelector("#progress-bar"),
   progressCount: document.querySelector("#progress-count"),
+  deleteModal: document.querySelector("#delete-modal"),
+  deleteCancel: document.querySelector("#delete-cancel"),
+  deleteConfirm: document.querySelector("#delete-confirm"),
 };
+
+let pendingDeleteId = null;
+let lastFocusedElement = null;
 
 function loadTodos() {
   const savedTodos = localStorage.getItem(STORAGE_KEY);
@@ -192,6 +198,55 @@ function render() {
   renderProgress();
 }
 
+function showCompletionEffect() {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  const container = document.createElement("div");
+  container.className = "confetti-container";
+  container.setAttribute("aria-hidden", "true");
+  const colors = ["#f472b6", "#facc15", "#60a5fa", "#34d399", "#c084fc"];
+
+  for (let index = 0; index < 28; index += 1) {
+    const petal = document.createElement("span");
+    petal.className = "confetti-petal";
+    petal.style.setProperty("--petal-color", colors[index % colors.length]);
+    petal.style.setProperty("--petal-left", `${45 + Math.random() * 10}%`);
+    petal.style.setProperty("--petal-x", `${(Math.random() - 0.5) * 55}vw`);
+    petal.style.setProperty("--petal-y", `${35 + Math.random() * 40}vh`);
+    petal.style.setProperty("--petal-rotation", `${Math.random() * 360}deg`);
+    petal.style.setProperty("--petal-duration", `${700 + Math.random() * 600}ms`);
+    container.append(petal);
+  }
+
+  document.body.append(container);
+  window.setTimeout(() => container.remove(), 1500);
+}
+
+function closeDeleteModal() {
+  pendingDeleteId = null;
+  elements.deleteModal.classList.add("hidden");
+  elements.deleteModal.classList.remove("flex");
+  lastFocusedElement?.focus();
+  lastFocusedElement = null;
+}
+
+function openDeleteModal(todoId, trigger) {
+  pendingDeleteId = todoId;
+  lastFocusedElement = trigger;
+  elements.deleteModal.classList.remove("hidden");
+  elements.deleteModal.classList.add("flex");
+  elements.deleteConfirm.focus();
+}
+
+function deletePendingTodo() {
+  if (!pendingDeleteId) return;
+
+  state.todos = state.todos.filter((todo) => todo.id !== pendingDeleteId);
+  saveTodos();
+  closeDeleteModal();
+  render();
+}
+
 function handleFormSubmit(event) {
   event.preventDefault();
   const text = elements.text.value.trim();
@@ -232,9 +287,12 @@ function handleTodoAction(event) {
   if (todoIndex === -1) return;
 
   if (actionElement.dataset.action === "toggle") {
+    const wasCompleted = state.todos[todoIndex].completed;
     state.todos[todoIndex].completed = actionElement.checked;
+    if (!wasCompleted && actionElement.checked) showCompletionEffect();
   } else if (actionElement.dataset.action === "delete") {
-    state.todos.splice(todoIndex, 1);
+    openDeleteModal(state.todos[todoIndex].id, actionElement);
+    return;
   }
 
   saveTodos();
@@ -244,6 +302,16 @@ function handleTodoAction(event) {
 elements.form.addEventListener("submit", handleFormSubmit);
 elements.list.addEventListener("click", handleTodoAction);
 elements.list.addEventListener("change", handleTodoAction);
+elements.deleteCancel.addEventListener("click", closeDeleteModal);
+elements.deleteConfirm.addEventListener("click", deletePendingTodo);
+elements.deleteModal.addEventListener("click", (event) => {
+  if (event.target === elements.deleteModal) closeDeleteModal();
+});
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && !elements.deleteModal.classList.contains("hidden")) {
+    closeDeleteModal();
+  }
+});
 elements.categoryTabs.addEventListener("click", (event) => {
   const button = event.target.closest("[data-category]");
   if (!button) return;
