@@ -1,0 +1,235 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap');
+
+:root {
+  --ink: #1d2733;
+  --muted: #74808c;
+  --paper: #f7f8f5;
+  --panel: #ffffff;
+  --line: #e4e8e4;
+  --accent: #286b5b;
+  --accent-dark: #1d5145;
+  --warm: #f2b84b;
+  --danger: #c14949;
+}
+
+body {
+  min-width: 320px;
+  color: var(--ink);
+  font-family: 'DM Sans', 'Noto Sans KR', sans-serif;
+  background: linear-gradient(135deg, #f8faf7 0%, #eef4ed 100%);
+}
+
+.app-shell {
+  max-width: 1120px;
+}
+
+.app-header {
+  max-width: 640px;
+}
+
+.eyebrow,
+.section-kicker {
+  color: var(--accent);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+}
+
+.workspace-panel {
+  border: 1px solid rgba(40, 107, 91, .12);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .9);
+  box-shadow: 0 18px 50px rgba(39, 61, 53, .08);
+}
+
+.category-nav {
+  overflow-x: auto;
+}
+
+.category-nav .nav {
+  min-width: max-content;
+}
+
+.category-nav .nav-link {
+  color: var(--muted);
+  border-radius: 999px;
+  font-size: .9rem;
+  font-weight: 600;
+}
+
+.category-nav .nav-link.active {
+  color: #fff;
+  background: var(--accent);
+}
+
+.tab-count {
+  display: inline-block;
+  min-width: 1.4rem;
+  margin-left: .2rem;
+  color: currentColor;
+  font-size: .75rem;
+  opacity: .7;
+}
+
+.form-label {
+  color: var(--ink);
+  font-size: .82rem;
+  font-weight: 600;
+}
+
+.form-control,
+.form-select {
+  border-color: var(--line);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 .2rem rgba(40, 107, 91, .14);
+}
+
+.btn-primary {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+.btn-primary:hover,
+.btn-primary:focus-visible {
+  border-color: var(--accent-dark);
+  background: var(--accent-dark);
+}
+
+.form-feedback {
+  color: var(--danger);
+  font-size: .8rem;
+  padding-top: .25rem;
+}
+
+.progress-summary {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 1.25rem 0;
+}
+
+.progress {
+  height: .65rem;
+  background: #e9efea;
+}
+
+.progress-bar {
+  background: var(--accent);
+  transition: width .25s ease;
+}
+
+.progress-percent {
+  color: var(--accent);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1.6rem;
+}
+
+.filter-group .btn {
+  font-weight: 600;
+}
+
+.filter-group .btn.active {
+  color: #fff;
+  border-color: var(--ink);
+  background: var(--ink);
+}
+
+.todo-list {
+  display: grid;
+  gap: .7rem;
+}
+
+.todo-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: .85rem;
+  align-items: start;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 1rem;
+  background: var(--panel);
+  transition: border-color .2s ease, transform .2s ease;
+}
+
+.todo-item:hover {
+  border-color: rgba(40, 107, 91, .4);
+  transform: translateY(-1px);
+}
+
+.todo-check {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: .15rem;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.todo-title {
+  overflow-wrap: anywhere;
+  font-size: .98rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.todo-item.is-completed .todo-title {
+  color: #98a29e;
+  text-decoration: line-through;
+}
+
+.todo-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+  margin-top: .45rem;
+}
+
+.todo-meta .badge {
+  font-weight: 500;
+}
+
+.todo-item.is-overdue .due-badge {
+  color: #fff;
+  background: var(--danger);
+}
+
+.delete-button {
+  color: var(--muted);
+  border: 0;
+  background: transparent;
+  font-size: .8rem;
+  font-weight: 600;
+}
+
+.delete-button:hover,
+.delete-button:focus-visible {
+  color: var(--danger);
+}
+
+.empty-state {
+  color: var(--muted);
+}
+
+.empty-mark {
+  color: var(--accent);
+  font-size: 2rem;
+  line-height: 1;
+}
+
+@media (max-width: 575.98px) {
+  .workspace-panel {
+    padding: 1rem !important;
+  }
+
+  .todo-item {
+    grid-template-columns: auto 1fr;
+  }
+
+  .delete-button {
+    grid-column: 2;
+    justify-self: start;
+    padding: 0;
+  }
+}
